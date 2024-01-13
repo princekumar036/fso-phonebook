@@ -24,10 +24,12 @@ const persons = [
     }
 ]
 
+// HOMEPAGE
 app.get('/', (req, res) => {
     res.send('Welcome to API')
 })
 
+// INFO PAGE
 app.get('/info', (req, res) => {
     const body = `Phonebook has info for ${persons.length} people
     <br/>
@@ -36,10 +38,19 @@ app.get('/info', (req, res) => {
     res.send(body)
 })
 
+// GET ALL
 app.get('/api/persons', (req, res) => {
     res.json(persons)
 })
 
+// GET ONE
+app.get('/api/persons/:id', (req, res) => {
+    const person = persons.find(note => note.id === Number(req.params.id))
+    if (!person) {
+        res.status(404).end()
+    }
+    res.send(person)
+})
 
 
 app.listen(3001)
