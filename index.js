@@ -28,6 +28,14 @@ app.get('/', (req, res) => {
     res.send('Welcome to API')
 })
 
+app.get('/info', (req, res) => {
+    const body = `Phonebook has info for ${persons.length} people
+    <br/>
+    ${String(new Date())}
+    `
+    res.send(body)
+})
+
 app.get('/api/persons', (req, res) => {
     res.json(persons)
 })
