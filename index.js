@@ -11,6 +11,7 @@ const app = express()
 app.use(express.json())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 app.use(cors())
+app.use(express.static('dist'))
 
 let persons = [
     { 
@@ -37,7 +38,7 @@ let persons = [
 
 // HOMEPAGE
 app.get('/', (req, res) => {
-    res.send('Welcome to API')
+    res.send('Welcome to Persons API')
 })
 
 // INFO PAGE
