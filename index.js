@@ -57,7 +57,16 @@ app.get('/api/persons/:id', (req, res) => {
 app.post('/api/persons', (req, res) => {
     const body = req.body
     if (!body) {
-        return res.status(400).json({error: 'missing'})
+        return res.status(400).json({error: 'missing body'})
+    }
+    if (!body.name) {
+        return res.status(400).json({error: 'missing name'})
+    }
+    if (!body.number) {
+        return res.status(400).json({error: 'missing number'})
+    }
+    if (persons.find(person => person.name === body.name)) {
+        return res.status(400).json({error: 'person already exists'})
     }
     const newPerson = {
         id: Math.ceil(Math.random()*100000),
