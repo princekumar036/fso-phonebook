@@ -1,9 +1,14 @@
 const express = require('express')
 const morgan = require('morgan')
 
+// Create a new morgan token
+morgan.token('body', (req, res) => {
+    return JSON.stringify(req.body)
+})
+
 const app = express()
 app.use(express.json())
-app.use(morgan('tiny'))
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 let persons = [
     { 
@@ -39,7 +44,7 @@ app.get('/info', (req, res) => {
     <br/>
     ${String(new Date())}
     `
-    res.send(body)
+    res.send(body.body)
 })
 
 // GET ALL
