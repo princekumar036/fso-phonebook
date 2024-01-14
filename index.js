@@ -1,5 +1,6 @@
 const express = require('express')
 const morgan = require('morgan')
+const cors = require('cors')
 
 // Create a new morgan token
 morgan.token('body', (req, res) => {
@@ -9,6 +10,7 @@ morgan.token('body', (req, res) => {
 const app = express()
 app.use(express.json())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
+app.use(cors())
 
 let persons = [
     { 
@@ -91,5 +93,4 @@ app.delete('/api/persons/:id', (req, res) => {
     res.status(204).end()
 })
 
-
-app.listen(3001)
+app.listen(process.env.port || 3001)
