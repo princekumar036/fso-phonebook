@@ -1,0 +1,14 @@
+
+GET http://localhost:3001/api/persons/
+
+### 
+GET http://localhost:3001/api/persons/2
+
+###
+POST http://localhost:3001/api/persons/
+Content-Type: application/json
+
+{
+    "name": "Praksh Raj",
+    "number": "23-83-389102"
+}

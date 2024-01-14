@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+app.use(express.json())
 
 let persons = [
     { 
@@ -49,7 +50,22 @@ app.get('/api/persons/:id', (req, res) => {
     if (!person) {
         res.status(404).end()
     }
-    res.send(person)
+    res.json(person)
+})
+
+// ADD ONE
+app.post('/api/persons', (req, res) => {
+    const body = req.body
+    if (!body) {
+        return res.status(400).json({error: 'missing'})
+    }
+    const newPerson = {
+        id: Math.ceil(Math.random()*100000),
+        name: body.name,
+        number: body.number
+    }
+    persons = persons.concat(newPerson)
+    res.json(newPerson)
 })
 
 // DELETE ONE
