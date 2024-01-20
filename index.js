@@ -21,12 +21,15 @@ app.get('/', (req, res) => {
 })
 
 // INFO PAGE
-app.get('/info', (req, res) => {
-    const body = `Phonebook has info for ${persons.length} people
-    <br/>
-    ${String(new Date())}
-    `
-    res.send(body.body)
+app.get('/info', (req, res, next) => {
+    Person.countDocuments({}).then(count => {
+        const body = `Phonebook has info for ${count} people
+        <br/>
+        ${String(new Date())}
+        `
+        res.send(body)
+    })
+    .catch(err => next(err))
 })
 
 // GET ALL
