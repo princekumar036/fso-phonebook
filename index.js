@@ -30,7 +30,7 @@ app.get('/info', (req, res) => {
 })
 
 // GET ALL
-app.get('/api/persons', (req, res) => {
+app.get('/api/persons', (req, res, next) => {
     Person.find({})
         .then(results => res.json(results))
         .catch(err => next(err))
@@ -51,7 +51,7 @@ app.get('/api/persons/:id', (req, res, next) => {
 })
 
 // ADD ONE
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
     const body = req.body
     if (!body) {
         return res.status(400).json({error: 'missing body'})
@@ -74,9 +74,23 @@ app.post('/api/persons', (req, res) => {
 })
 
 // DELETE ONE
-app.delete('/api/persons/:id', (req, res) => {
+app.delete('/api/persons/:id', (req, res, next) => {
     Person.findByIdAndDelete(req.params.id)
         .then(result => res.status(204).end())
+        .catch(err => next(err))
+})
+
+// UPDATE ONE
+app.put('/api/persons/:id', (req, res, next) => {
+    const body = req.body
+    const updatedPerson = {
+        name: body.name,
+        number: body.number
+    }
+    Person.findByIdAndUpdate(req.params.id, updatedPerson, {new: true})
+        .then(updatedPerson => {
+            res.json(updatedPerson)
+        })
         .catch(err => next(err))
 })
 
