@@ -56,15 +56,7 @@ app.get('/api/persons/:id', (req, res, next) => {
 // ADD ONE
 app.post('/api/persons', (req, res, next) => {
     const body = req.body
-    if (!body) {
-        return res.status(400).json({error: 'missing body'})
-    }
-    if (!body.name) {
-        return res.status(400).json({error: 'missing name'})
-    }
-    if (!body.number) {
-        return res.status(400).json({error: 'missing number'})
-    }
+
     const newPerson = new Person ({
         name: body.name,
         number: body.number
@@ -86,7 +78,7 @@ app.delete('/api/persons/:id', (req, res, next) => {
 // UPDATE ONE
 app.put('/api/persons/:id', (req, res, next) => {
     const { name, number } = req.body
-    Person.findByIdAndUpdate(req.params.id, { name, number }, { new: true, runValidators: true, context: 'query' })
+    Person.findByIdAndUpdate(req.params.id, { name, number }, { new: true, runValidators: true })
         .then(updatedPerson => {
             res.json(updatedPerson)
         })
