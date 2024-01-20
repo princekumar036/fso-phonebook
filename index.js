@@ -1,7 +1,9 @@
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
-const mongoose = require('mongoose')
+// const mongoose = require('mongoose')
+require('dotenv').config()
+const Person = require('./models/person')
 
 // Create a new morgan token
 morgan.token('body', (req, res) => {
@@ -13,23 +15,6 @@ app.use(express.json())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 app.use(cors())
 app.use(express.static('dist'))
-
-const DBPass = process.argv[2]
-const DB_URL = `mongodb+srv://theodinproject:${DBPass}@cluster0.w2yptts.mongodb.net/?retryWrites=true&w=majority`
-mongoose.set('strictQuery', false)
-mongoose.connect(DB_URL)
-const personSchema = new mongoose.Schema({
-    name: String,
-    number: String
-})
-personSchema.set('toJSON', {
-    transform: (document, returedObj) => {
-        returedObj.id = returedObj._id.toString()
-        delete returedObj._id
-        delete returedObj.__v
-    }
-})
-const Person = mongoose.model('Person', personSchema)
 
 // HOMEPAGE
 app.get('/', (req, res) => {
@@ -55,37 +40,33 @@ app.get('/api/persons', (req, res) => {
 })
 
 // GET ONE
-// app.get('/api/persons/:id', (req, res) => {
-//     const person = persons.find(person => person.id === Number(req.params.id))
-//     if (!person) {
-//         res.status(404).end()
-//     }
-//     res.json(person)
-// })
+app.get('/api/persons/:id', (req, res) => {
+    Person.findById(req.params.id).then(result => {
+        res.json(result)
+    })
+})
 
-// // ADD ONE
-// app.post('/api/persons', (req, res) => {
-//     const body = req.body
-//     if (!body) {
-//         return res.status(400).json({error: 'missing body'})
-//     }
-//     if (!body.name) {
-//         return res.status(400).json({error: 'missing name'})
-//     }
-//     if (!body.number) {
-//         return res.status(400).json({error: 'missing number'})
-//     }
-//     if (persons.find(person => person.name === body.name)) {
-//         return res.status(400).json({error: 'person already exists'})
-//     }
-//     const newPerson = {
-//         id: Math.ceil(Math.random()*100000),
-//         name: body.name,
-//         number: body.number
-//     }
-//     persons = persons.concat(newPerson)
-//     res.json(newPerson)
-// })
+// ADD ONE
+app.post('/api/persons', (req, res) => {
+    const body = req.body
+    if (!body) {
+        return res.status(400).json({error: 'missing body'})
+    }
+    if (!body.name) {
+        return res.status(400).json({error: 'missing name'})
+    }
+    if (!body.number) {
+        return res.status(400).json({error: 'missing number'})
+    }
+    const newPerson = new Person({
+        id: Math.ceil(Math.random()*100000),
+        name: body.name,
+        number: body.number
+    })
+    newPerson.save().then(savedPerson => {
+        res.json(savedPerson)
+    })
+})
 
 // // DELETE ONE
 // app.delete('/api/persons/:id', (req, res) => {
