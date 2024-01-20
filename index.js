@@ -11,10 +11,10 @@ morgan.token('body', (req, res) => {
 })
 
 const app = express()
+app.use(express.static('dist'))
 app.use(express.json())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 app.use(cors())
-app.use(express.static('dist'))
 
 // HOMEPAGE
 app.get('/', (req, res) => {
@@ -68,10 +68,12 @@ app.post('/api/persons', (req, res) => {
     })
 })
 
-// // DELETE ONE
-// app.delete('/api/persons/:id', (req, res) => {
-//     persons = persons.filter(person => person.id !== Number(req.params.id))
-//     res.status(204).end()
-// })
+// DELETE ONE
+app.delete('/api/persons/:id', (req, res) => {
+    console.log(req.params.id)
+    Person.findByIdAndDelete(req.params.id)
+        .then(result => res.status(204).end())
+        .catch(err => res.status(404).end())
+})
 
 app.listen(process.env.port || 3001)
