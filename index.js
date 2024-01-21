@@ -65,7 +65,7 @@ app.post('/api/persons', (req, res, next) => {
         .then(savedPerson => {
             res.json(savedPerson)
         })
-        .catch(err => next(err))
+        .catch(err => {next(err)})
 })
 
 // DELETE ONE
